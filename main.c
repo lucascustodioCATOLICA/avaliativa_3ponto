@@ -137,6 +137,7 @@ int main () {
 		printf("R - READ ALL \n");
 		printf("U - READ BY ID \n");
 		printf("D - DELETE \n");
+		printf("Ctrl/C - SAIR \n");
 
 		handleInput(userList);
 	}
