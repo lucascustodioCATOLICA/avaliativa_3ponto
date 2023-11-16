@@ -10,7 +10,7 @@ typedef struct User {
 	int id;
 	char desc[64];	
 	int amoult;	
-	int value;
+	float value;
 } User;
 
 int userListIndex = 0;
@@ -34,16 +34,12 @@ void handleCreate (User userList[]) {
 	userList[userListIndex].id = id;
 
 	printf("--- CRIACAO DE PRODUTO --- \n");
-	fflush(stdin);
 	printf("Digite a descricao: ");
 	fgets(userList[userListIndex].desc, 64, stdin);
-	fflush(stdin);
 	printf("Digite a quantidade: ");
 	scanf("%d", &userList[userListIndex].amoult);
-	fflush(stdin);
 	printf("Digite o valor: ");
-	scanf("%d", &userList[userListIndex].value);
-	fflush(stdin);
+	scanf("%f", &userList[userListIndex].value);
 	
 	userListIndex++;
 	clearScreen();
@@ -52,20 +48,62 @@ void handleCreate (User userList[]) {
 void handleReadAll (User userList[]) {
 	clearScreen();
 
-	printf("--- RELATORIO --- \n");
+	printf("--- RELATORIO --- \n\n");
 	for(int i = 0; i < userListIndex; i++) {
-		printf("ID %d \n", userList[i].id);
-		printf("DESCRICAO %s \n", userList[i].desc);
-		printf("QUANTIDADE %d \n", userList[i].amoult);
-		printf("VALOR %d \n", userList[i].value);
-		printf("--- \n");
+		if (userList[i].id != 0) {
+			printf("ID %d \n", userList[i].id);
+			printf("DESCRICAO %s", userList[i].desc);
+			printf("QUANTIDADE %d \n", userList[i].amoult);
+			printf("VALOR %.2f \n", userList[i].value);
+			printf("\n");
+		}
 	}
+}
+
+void handleReadById (User userList[]) {
+	clearScreen();
+	
+	int targetId;
+	printf("Digite um ID (numero): ");
+	scanf("%d", &targetId);
+
+	for(int i = 0; i < userListIndex; i++) {
+		if(targetId == userList[i].id) {
+			printf("ID %d \n", userList[i].id);
+			printf("DESCRICAO %s", userList[i].desc);
+			printf("QUANTIDADE %d \n", userList[i].amoult);
+			printf("VALOR %.2f \n", userList[i].value);
+			printf("\n");
+		}
+	}
+}
+
+void remove_element(User *array, int index, int array_length)
+{
+   int i;
+   for(i = index; i < array_length; i++) array[i] = array[i + 1];
+}
+
+void handleDeleteById (User userList[]) {
+	clearScreen();
+	
+	int targetId;
+	printf("Digite um ID (numero): ");
+	scanf("%d", &targetId);
+
+	for(int i = 0; i < userListIndex; i++) {
+		if(targetId == userList[i].id) {
+			remove_element(userList, i, userListIndex);
+			return;
+		}
+	}
+	printf("O produto nao esta cadastrado. \n");
 }
 
 void handleInput (User userList[]) {
 	char input;
-	scanf("%c", &input);
-	fflush(stdin);
+	scanf("%s", &input);
+	getchar();
 
 	switch (input)
 	{
@@ -79,9 +117,11 @@ void handleInput (User userList[]) {
 		break;
 	case 'U':
 	case 'u':
+		handleReadById(userList);
 		break;
 	case 'D':
 	case 'd':
+		handleDeleteById(userList);
 		break;
 	default:
 		break;
